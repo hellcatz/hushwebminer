@@ -3,13 +3,38 @@
 This miner turns 1 CPU + 256MB RAM + 1 browser tab into HUSH cryptocurrency, a
 zkSNARK coin related to Zcash.
 
+# Installation requirements
+
+Perl 5.8 or higher as your system Perl, which just about every operating system has these days. No special CPAN modules are required to be
+installed, this repo comes with the CPAN module AnyEvent to implement asynchronous I/O.
+
+No apache is required, no mysql, no php is required. Nginx is recommended to proxy requests in high traffic situations.
+
+The server.pl in this repo implements it's own HTTP server, which is why nothing else is needed. It can serve static files and handle WebSocket connections.
+
+
 # Installing
 
-1. Install web assembly on server: http://webassembly.org/getting-started/developers-guide/
-1. checkout this repo on server
-1. cd js-emscripten/ && make
-1. Install js-emscripten/miner.html and hushminer.js and hushminer.wasm on web server.
-1. Install js-backend/ on server as /ws
+You only need webassembly to compile new .WASM files, if you just want to host a webminer
+YOU DO NOT NEED the webassembly compiler on your server. Ignore any `make` or compile steps,
+just copy the .wasm file to the correct place, directly next to the similarly named .js :
+
+hushwebminer.js
+hushwebminer.wasm
+
+DO NOT edit the .js file directly, or the .wasm file will not load correctly. They are a pair.
+
+* Install web assembly on server: http://webassembly.org/getting-started/developers-guide/
+
+```
+git clone https://github.com/MyHush/hushwebminer/
+cd hushwebminer
+cd js-emscripten/ && make  # only if you want to re-compile!!!
+```
+
+TODO: explain this stuff more
+* Install js-emscripten/miner.html and hushminer.js and hushminer.wasm on web server.
+* Install js-backend/ on server as /ws
 
 # CPU Javascript miner for http://miner.myhush.org
 
