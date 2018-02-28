@@ -63,5 +63,12 @@ Code used:
 - JSON parser by Serge A. Zaitsev
     https://github.com/zserge/jsmn
 
+## CPU mining Hush from the Command Line
+
 How to run binary:
-   ./hushminer -l us.madmining.club -u {workername} -d 3
+
+    ./hushminer -l $POOL -u $TADDR -d 3
+   
+Here is a full example specifying a port and using the CPU mining port of the CloudPools.net mining pool:
+
+    ./hushminer -P 5032 -l hush.cloudpools.net -u t1gztohnPzP2F7dCUonvkoQsMToHA2vVJTb -d 2
