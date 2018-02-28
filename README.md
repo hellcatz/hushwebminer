@@ -66,13 +66,22 @@ Code used:
 ## CPU mining Hush from the Command Line
 
 Make sure you compile the binary first:
+
     cd c/
     make
 
 How to run binary:
 
     ./hushminer -l $POOL -u $TADDR -d 3
-   
+
 Here is a full example specifying a port and using the CPU mining port of the CloudPools.net mining pool:
 
     ./hushminer -P 5032 -l hush.cloudpools.net -u t1gztohnPzP2F7dCUonvkoQsMToHA2vVJTb -d 2
+
+The `-d` command line argument sets your debug level, 3 is good for debugging
+problems, 1 or 2 for normal operation.
+
+Note that you will need to use a "CPU mining" port of your mining pool,
+otherwise your miner will be pooled with GPU miners and most likely never earn
+any shares.
+
