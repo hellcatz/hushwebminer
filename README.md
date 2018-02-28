@@ -65,6 +65,10 @@ Code used:
 
 ## CPU mining Hush from the Command Line
 
+Make sure you compile the binary first:
+    cd c/
+    make
+
 How to run binary:
 
     ./hushminer -l $POOL -u $TADDR -d 3
