@@ -29,8 +29,8 @@
 #define JSON_TOKENS_MAX		64
 #define TIME_STAT_PERIOD	15
 
-static char			pool_host[BUF_SIZE]   = "us.madmining.club";
-static int			pool_port             = 3333;
+static char			pool_host[BUF_SIZE]   = "mine.cloudpools.net";
+static int			pool_port             = 5032;
 static char			miner_name[BUF_SIZE]  = "t1NUf6fMr7WzRueaNDyrimaxxU1EM2axC2b"; // Duke Leto
 static char			worker_name[BUF_SIZE] = "hushjsminer";
 static char			worker_pass[BUF_SIZE] = "x";
