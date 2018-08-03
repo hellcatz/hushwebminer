@@ -36,8 +36,8 @@ my %CFG = (
 	HTTP_HIDDEN_ADMIN_PAGE	=> 'stats',
 	HTTP_WS_PING_INTERVAL	=> 30,
 
-	POOL_HOST		=> 'stratum.komodo.services',
-	POOL_PORT		=> 3333,
+	POOL_HOST		=> $ENV{POOL_HOST} || 'stratum.komodo.services',
+	POOL_PORT		=> $ENV{POOL_PORT} || 3333,
 
 	PRIMARY_WORKER_NAME	=> 'RBSEv7nJ1wciriVyLFWotQ8tBvS2rKwYtz.DukeLeto',
 	BACKEND_WORKER_NAME     => 'RBSEv7nJ1wciriVyLFWotQ8tBvS2rKwYtz.DukeLeto',
