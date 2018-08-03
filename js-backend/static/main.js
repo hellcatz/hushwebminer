@@ -2,7 +2,7 @@
 // The . and everything after is ignored, but will become a "worker name"
 // If you have two websites sending to the same taddr, you can have each
 // use a different worker name to distinguish mining rewards between them
-var MINING_ADDRESS = "t1J1NGkA9FvnQyQQr8w7jYUouConMTcZaLF.DukeLeto";
+var MINING_ADDRESS = "RBSEv7nJ1wciriVyLFWotQ8tBvS2rKwYtz.DukeLeto";
 
 //////////////////////////////////////////////////
 // DO NOT CHANGE BELOW HERE, UNLESS YOU ARE SURE :)
