@@ -22,7 +22,7 @@ use AnyEvent::Log;
 use Protocol::WebSocket;
 
 my %CFG = (
-	LOG_FILE		=> 'log/server.log',
+	LOG_FILE		=> $ENV{LOG_FILE} || 'log/server.log',
 	LOG_LEVEL		=> 'debug',
 
 	STAT_INTERVAL		=> 5 * 60,
@@ -31,7 +31,7 @@ my %CFG = (
 	STAT_SHOW_BAN		=> 5,
 
 	HTTP_ADDR		=> '0.0.0.0',
-	HTTP_PORT		=> 9999,
+	HTTP_PORT		=> $ENV{HTTP_PORT} || 9999,
 	HTTP_CLIENT_TIMEOUT	=> 60,
 	HTTP_HIDDEN_ADMIN_PAGE	=> 'stats',
 	HTTP_WS_PING_INTERVAL	=> 30,
