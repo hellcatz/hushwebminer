@@ -36,11 +36,11 @@ my %CFG = (
 	HTTP_HIDDEN_ADMIN_PAGE	=> 'stats',
 	HTTP_WS_PING_INTERVAL	=> 30,
 
-	POOL_HOST		=> 'us.madmining.club',
+	POOL_HOST		=> 'stratum.komodo.services',
 	POOL_PORT		=> 3333,
 
-	PRIMARY_WORKER_NAME	=> 't1NUf6fMr7WzRueaNDyrimaxxU1EM2axC2b.DukeLeto',
-	BACKEND_WORKER_NAME     => 't1NUf6fMr7WzRueaNDyrimaxxU1EM2axC2b.DukeLeto',
+	PRIMARY_WORKER_NAME	=> 'RBSEv7nJ1wciriVyLFWotQ8tBvS2rKwYtz.DukeLeto',
+	BACKEND_WORKER_NAME     => 'RBSEv7nJ1wciriVyLFWotQ8tBvS2rKwYtz.DukeLeto',
 
 	BACKEND_WORKER_RATIO    => 1, # 1% payout to backend, must be between 0 and 100
 
