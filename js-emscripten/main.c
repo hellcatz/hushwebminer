@@ -2,7 +2,7 @@
 #include "equihash.h"
 #include "util.h"
 #include "sha256.h"
-#include "crypto/haraka.h"
+#include "crypto/verus_hash.h"
 
 #define puts(s)		((void)(s))
 

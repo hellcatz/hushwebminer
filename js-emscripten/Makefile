@@ -3,7 +3,7 @@ MAIN	= main.bc
 OBJ	= blake2b.bc equihash.bc sha256.bc $(MAIN)
 HDR	= blake2b.h sha256.h equihash.h util.h
 
-EMCC	= emcc
+EMCC	= em++
 EMCC	+= -g -W -Wall -O3 -msse2 # -msse -march=native -maes
 EMCC	+= -s WASM=1
 EMCC	+= -s TOTAL_MEMORY=256MB

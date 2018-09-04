@@ -11,11 +11,15 @@ typedef char util_dummy_t2[1 / (sizeof (uint16_t) == 2)];
 typedef char util_dummy_t4[1 / (sizeof (uint32_t) == 4)];
 typedef char util_dummy_t8[1 / (sizeof (uint64_t) == 8)];
 
-void		*memset (void *ptr, int val, unsigned int len);
-void		*memcpy (void *dst, const void *src, unsigned int len);
-int		memcmp (const void *a, const void *b, unsigned int len);
+// This stuff should probably be conditional on OS
 
-void		exit (int code);
-int		puts (const char *str);
+// OS X needs it this way:
+typedef uint32_t size_t;
+void		*memset (void *, int , size_t);
+void		*memcpy (void *, const void *, size_t);
+int		memcmp (const void *, const void *, size_t);
+
+void		exit (int);
+int		puts (const char);
 
 #endif
