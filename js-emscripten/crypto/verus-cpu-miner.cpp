@@ -33,6 +33,55 @@
 
 #define N_ZERO_BYTES				12
 
+#ifdef SSE_ENABLE
+
+#include "immintrin.h"
+
+#define NUMROUNDS 5
+
+#ifdef _WIN32
+typedef unsigned long long u64;
+#else
+typedef unsigned long u64;
+#endif
+typedef __m128i u128;
+
+extern u128 rc[40];
+
+#define LOAD(src) _mm_load_si128((u128 *)(src))
+#define STORE(dest,src) _mm_storeu_si128((u128 *)(dest),src)
+
+#define AES4_zero(s0, s1, s2, s3, rci) \
+  s0 = _mm_aesenc_si128(s0, rc0[rci]); \
+  s1 = _mm_aesenc_si128(s1, rc0[rci + 1]); \
+  s2 = _mm_aesenc_si128(s2, rc0[rci + 2]); \
+  s3 = _mm_aesenc_si128(s3, rc0[rci + 3]); \
+  s0 = _mm_aesenc_si128(s0, rc0[rci + 4]); \
+  s1 = _mm_aesenc_si128(s1, rc0[rci + 5]); \
+  s2 = _mm_aesenc_si128(s2, rc0[rci + 6]); \
+  s3 = _mm_aesenc_si128(s3, rc0[rci + 7]); \
+
+#define MIX4(s0, s1, s2, s3) \
+  tmp  = _mm_unpacklo_epi32(s0, s1); \
+  s0 = _mm_unpackhi_epi32(s0, s1); \
+  s1 = _mm_unpacklo_epi32(s2, s3); \
+  s2 = _mm_unpackhi_epi32(s2, s3); \
+  s3 = _mm_unpacklo_epi32(s0, s2); \
+  s0 = _mm_unpackhi_epi32(s0, s2); \
+  s2 = _mm_unpackhi_epi32(s1, tmp); \
+  s1 = _mm_unpacklo_epi32(s1, tmp);
+
+#define TRUNCSTORE(out, s0, s1, s2, s3) \
+  *(u64*)(out) = *(((u64*)&s0 + 1)); \
+  *(u64*)(out + 8) = *(((u64*)&s1 + 1)); \
+  *(u64*)(out + 16) = *(((u64*)&s2 + 0)); \
+  *(u64*)(out + 24) = *(((u64*)&s3 + 0));
+
+void haraka512_zero(unsigned char *out, const unsigned char *in);
+
+#endif
+
+
 int	verbose = 0;
 
 int32_t	cpu_mode = 1;
@@ -222,6 +271,42 @@ void haraka512_port_zero(unsigned char *out, unsigned char *in)
 	memcpy(out + 24, buf + 48, 8);
 }
 
+#ifdef SSE_ENABLE
+/* CPU Optimized AES */
+typedef __m128i u128;
+u128 rc0[40] = { 0 };
+void haraka512_zero(unsigned char *out, const unsigned char *in) {
+	u128 s[4], tmp;
+
+	s[0] = LOAD(in);
+	s[1] = LOAD(in + 16);
+	s[2] = LOAD(in + 32);
+	s[3] = LOAD(in + 48);
+
+	AES4_zero(s[0], s[1], s[2], s[3], 0);
+	MIX4(s[0], s[1], s[2], s[3]);
+
+	AES4_zero(s[0], s[1], s[2], s[3], 8);
+	MIX4(s[0], s[1], s[2], s[3]);
+
+	AES4_zero(s[0], s[1], s[2], s[3], 16);
+	MIX4(s[0], s[1], s[2], s[3]);
+
+	AES4_zero(s[0], s[1], s[2], s[3], 24);
+	MIX4(s[0], s[1], s[2], s[3]);
+
+	AES4_zero(s[0], s[1], s[2], s[3], 32);
+	MIX4(s[0], s[1], s[2], s[3]);
+
+	s[0] = _mm_xor_si128(s[0], LOAD(in));
+	s[1] = _mm_xor_si128(s[1], LOAD(in + 16));
+	s[2] = _mm_xor_si128(s[2], LOAD(in + 32));
+	s[3] = _mm_xor_si128(s[3], LOAD(in + 48));
+
+	TRUNCSTORE(out, s[0], s[1], s[2], s[3]);
+}
+#endif
+
 bool full_target_test(const unsigned char *hash, const unsigned char *target)
 {
 #pragma unroll 32
@@ -293,7 +378,11 @@ size_t solve_verushash(size_t global_ws,
 		if (len - pos >= 32)
 		{
 			memcpy(bufPtr + 32, ptr + pos, 32);
+#ifdef SSE_ENABLE
+                        haraka512_zero(bufPtr2, bufPtr);
+#else
 			haraka512_port_zero(bufPtr2, bufPtr);
+#endif
 			bufPtr2 = bufPtr;
 			bufPtr += nextOffset;
 			nextOffset *= -1;
@@ -313,7 +402,11 @@ size_t solve_verushash(size_t global_ws,
 		// next solution
 		*((uint32_t *)(pinput + 32)) = (uint32_t)(i + offset);
 		// get hash result
-		haraka512_port_zero(vout_hash, pinput);
+#ifdef SSE_ENABLE
+                        haraka512_zero(vout_hash, pinput);
+#else
+                        haraka512_port_zero(vout_hash, pinput);
+#endif
 		// test against target
 		if (full_target_test(vout_hash, target) == true) {
 			*shares += 1;
@@ -447,6 +540,8 @@ void run_miner(uint8_t *header, size_t header_len, size_t global_ws)
 			fflush(stdout);
 		}
 	}
+
+	//future._Abandon();
 }
 
 std::string read_file(const char* file)
